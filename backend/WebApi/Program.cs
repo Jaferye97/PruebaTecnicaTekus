@@ -1,5 +1,9 @@
+using Application.Ports.RepositoryEntityFrameworkSqlServer;
+using Application.UseCases.Supplier;
+using Application.UseCases.Supplier.Implementations;
 using Microsoft.EntityFrameworkCore;
 using RepositoryEntityFrameworkSqlServer.Context;
+using RepositoryEntityFrameworkSqlServer.Repositories.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +17,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IAddSupplierUseCase, AddSupplierUseCase>();
+
+builder.Services.AddScoped<ISupplierRepositoryPort, SupplierRepository>();
 
 var app = builder.Build();
 
