@@ -1,7 +1,7 @@
 ﻿using Domain.Models.Supplier;
 using RepositoryEntityFrameworkSqlServer.Entities;
 
-namespace RepositoryEntityFrameworkSqlServer.Repositories.Implementations
+namespace RepositoryEntityFrameworkSqlServer.Repositories
 {
     public interface ISupplierAttributeRepository
     {

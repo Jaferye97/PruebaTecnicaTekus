@@ -3,6 +3,7 @@ using Application.UseCases.Supplier;
 using Application.UseCases.Supplier.Implementations;
 using Microsoft.EntityFrameworkCore;
 using RepositoryEntityFrameworkSqlServer.Context;
+using RepositoryEntityFrameworkSqlServer.Repositories;
 using RepositoryEntityFrameworkSqlServer.Repositories.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
