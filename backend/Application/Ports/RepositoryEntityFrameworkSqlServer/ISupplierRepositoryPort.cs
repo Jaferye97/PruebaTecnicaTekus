@@ -1,4 +1,5 @@
-﻿using Domain.Models.Supplier;
+﻿using Domain.Models.Commons;
+using Domain.Models.Supplier;
 
 namespace Application.Ports.RepositoryEntityFrameworkSqlServer
 {
@@ -8,5 +9,6 @@ namespace Application.Ports.RepositoryEntityFrameworkSqlServer
         Task<SupplierModel> AddAsync(SupplierModel model);
         Task<SupplierModel> GetAsync(int id);
         Task<bool> UpdateAsync(SupplierModel model);
+        Task<PagedResult<SupplierModel>> GetAllAsync(SupplierFilterModel filter);
     }
 }

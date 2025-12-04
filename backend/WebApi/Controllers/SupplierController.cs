@@ -11,16 +11,19 @@ namespace WebApi.Controllers
         private readonly IAddSupplierUseCase _addSupplierUseCase;
         private readonly IGetSupplierByIdUseCase _getSupplierByIdUseCase;
         private readonly IUpdateSupplierUseCase _updateSupplierUseCase;
+        private readonly IGetSupplierByFiltersUseCase _getSupplierByFiltersUseCase;
 
         public SupplierController(
             IAddSupplierUseCase addSupplierUseCase,
             IGetSupplierByIdUseCase getSupplierByIdUseCase,
-            IUpdateSupplierUseCase updateSupplierUseCase
+            IUpdateSupplierUseCase updateSupplierUseCase,
+            IGetSupplierByFiltersUseCase getSupplierByFiltersUseCase
         )
         {
             _addSupplierUseCase = addSupplierUseCase;
             _getSupplierByIdUseCase = getSupplierByIdUseCase;
             _updateSupplierUseCase = updateSupplierUseCase;
+            _getSupplierByFiltersUseCase = getSupplierByFiltersUseCase;
         }
 
         [HttpPost()]
@@ -44,6 +47,14 @@ namespace WebApi.Controllers
             var result = await _updateSupplierUseCase.ExecuteAsync(model);
 
             return result == false ? NotFound() : Ok(result);
+        }
+
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllAsync([FromQuery] SupplierFilterModel filters)
+        {
+            var result = await _getSupplierByFiltersUseCase.ExecuteAsync(filters);
+
+            return Ok(result);
         }
     }
 }

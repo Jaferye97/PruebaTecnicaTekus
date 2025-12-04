@@ -1,5 +1,7 @@
 ﻿using Application.Ports.RepositoryEntityFrameworkSqlServer;
+using Domain.Models.Commons;
 using Domain.Models.Supplier;
+using Microsoft.EntityFrameworkCore;
 using RepositoryEntityFrameworkSqlServer.Context;
 using RepositoryEntityFrameworkSqlServer.Entities;
 using RepositoryEntityFrameworkSqlServer.Mappers;
@@ -73,6 +75,39 @@ namespace RepositoryEntityFrameworkSqlServer.Repositories.Implementations
                 await transaction.RollbackAsync();
                 return false;
             }
+        }
+
+        public async Task<PagedResult<SupplierModel>> GetAllAsync(SupplierFilterModel filter)
+        {
+            IQueryable<SupplierEntity> query = _dbSet;
+
+            if (!string.IsNullOrEmpty(filter.Name))
+                query = query.Where(t => t.Name.Contains(filter.Name));
+
+            if (!string.IsNullOrEmpty(filter.Email))
+                query = query.Where(t => t.Email == filter.Email);
+
+            if (!string.IsNullOrEmpty(filter.TaxId))
+                query = query.Where(t => t.TaxId == filter.TaxId);
+
+            var totalItems = await query.CountAsync();
+
+            filter.Page = filter.Page <= 0 ? 1 : filter.Page;
+            filter.PageSize = filter.PageSize <= 0 ? 10 : filter.PageSize;
+
+            var entities = await query
+                .OrderByDescending(t => t.TaxId)
+                .Skip((filter.Page - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+
+            return new PagedResult<SupplierModel>
+            {
+                Items = entities.Select(SupplierMapper.ToDomain).ToList(),
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling((double)totalItems / filter.PageSize),
+                CurrentPage = filter.Page
+            };
         }
     }
 }
