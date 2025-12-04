@@ -19,6 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAddSupplierUseCase, AddSupplierUseCase>();
+builder.Services.AddScoped<IGetSupplierByIdUseCase, GetSupplierByIdUseCase>();
 
 builder.Services.AddScoped<ISupplierRepositoryPort, SupplierRepository>();
 

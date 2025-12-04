@@ -9,12 +9,15 @@ namespace WebApi.Controllers
     public class SupplierController : ControllerBase
     {
         private readonly IAddSupplierUseCase _addSupplierUseCase;
+        private readonly IGetSupplierByIdUseCase _getSupplierByIdUseCase;
 
         public SupplierController(
-            IAddSupplierUseCase addSupplierUseCase
+            IAddSupplierUseCase addSupplierUseCase,
+            IGetSupplierByIdUseCase getSupplierByIdUseCase
         )
         {
             _addSupplierUseCase = addSupplierUseCase;
+            _getSupplierByIdUseCase = getSupplierByIdUseCase;
         }
 
         [HttpPost()]
@@ -22,6 +25,14 @@ namespace WebApi.Controllers
         {
             var result = await _addSupplierUseCase.ExecuteAsync(model);
             return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAsync([FromRoute] int id)
+        {
+            var result = await _getSupplierByIdUseCase.ExecuteAsync(id);
+
+            return result == null ? NotFound() : Ok(result);
         }
     }
 }

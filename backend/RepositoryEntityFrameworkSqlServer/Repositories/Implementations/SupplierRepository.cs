@@ -12,6 +12,18 @@ namespace RepositoryEntityFrameworkSqlServer.Repositories.Implementations
         {
         }
 
+        public async Task<bool> ExistRecordAsync(int id) => await base.CountAsync(x => x.Id == id) > 0;
+
         public async Task<SupplierModel> AddAsync(SupplierModel model) => SupplierMapper.ToDomain(await base.AddAsync(model));
+
+        public async Task<SupplierModel> GetAsync(int id)
+        {
+            var model = await base.GetUniqueAsync(
+                filter: s => s.Id == id,
+                includes: s => s.SupplierAttribute
+            );
+
+            return model;
+        }
     }
 }
