@@ -13,6 +13,14 @@ namespace RepositoryEntityFrameworkSqlServer.Mappers
             AttributeValue = entity.AttributeValue
         };
 
+        public static SupplierAttributeEntity ToEntity(this SupplierAttributeModel domain) => new SupplierAttributeEntity
+        {
+            Id = domain.Id,
+            SupplierId = domain.SupplierId,
+            AttributeName = domain.AttributeName,
+            AttributeValue = domain.AttributeValue
+        };
+
         public static SupplierAttributeEntity ToEntity(this SupplierAttributeModel domain, int supplierId) => new SupplierAttributeEntity
         {
             Id = domain.Id,

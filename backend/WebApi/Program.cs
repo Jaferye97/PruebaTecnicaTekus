@@ -20,8 +20,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAddSupplierUseCase, AddSupplierUseCase>();
 builder.Services.AddScoped<IGetSupplierByIdUseCase, GetSupplierByIdUseCase>();
+builder.Services.AddScoped<IUpdateSupplierUseCase, UpdateSupplierUseCase>();
+
 
 builder.Services.AddScoped<ISupplierRepositoryPort, SupplierRepository>();
+builder.Services.AddScoped<ISupplierAttributeRepository, SupplierAttributeRepository>();
 
 var app = builder.Build();
 

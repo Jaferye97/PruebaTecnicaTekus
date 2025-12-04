@@ -10,14 +10,17 @@ namespace WebApi.Controllers
     {
         private readonly IAddSupplierUseCase _addSupplierUseCase;
         private readonly IGetSupplierByIdUseCase _getSupplierByIdUseCase;
+        private readonly IUpdateSupplierUseCase _updateSupplierUseCase;
 
         public SupplierController(
             IAddSupplierUseCase addSupplierUseCase,
-            IGetSupplierByIdUseCase getSupplierByIdUseCase
+            IGetSupplierByIdUseCase getSupplierByIdUseCase,
+            IUpdateSupplierUseCase updateSupplierUseCase
         )
         {
             _addSupplierUseCase = addSupplierUseCase;
             _getSupplierByIdUseCase = getSupplierByIdUseCase;
+            _updateSupplierUseCase = updateSupplierUseCase;
         }
 
         [HttpPost()]
@@ -33,6 +36,14 @@ namespace WebApi.Controllers
             var result = await _getSupplierByIdUseCase.ExecuteAsync(id);
 
             return result == null ? NotFound() : Ok(result);
+        }
+
+        [HttpPut()]
+        public async Task<IActionResult> UpdateAsync([FromBody] SupplierModel model)
+        {
+            var result = await _updateSupplierUseCase.ExecuteAsync(model);
+
+            return result == false ? NotFound() : Ok(result);
         }
     }
 }

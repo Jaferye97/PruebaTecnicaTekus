@@ -7,5 +7,6 @@ namespace Application.Ports.RepositoryEntityFrameworkSqlServer
         Task<bool> ExistRecordAsync(int id);
         Task<SupplierModel> AddAsync(SupplierModel model);
         Task<SupplierModel> GetAsync(int id);
+        Task<bool> UpdateAsync(SupplierModel model);
     }
 }
