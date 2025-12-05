@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using Application.Ports.RepositoryEntityFrameworkSqlServer;
+﻿using Application.Ports.RepositoryEntityFrameworkSqlServer;
 using Domain.Models.Service;
 using Microsoft.EntityFrameworkCore;
 using RepositoryEntityFrameworkSqlServer.Context;
@@ -80,5 +79,7 @@ namespace RepositoryEntityFrameworkSqlServer.Repositories.Implementations
 
             return result.FirstOrDefault();
         }
+
+        public async Task<ServiceModel> UpdateAsync(ServiceModel model) => ServiceMapper.ToDomain(await base.UpdateAsync(model));
     }
 }

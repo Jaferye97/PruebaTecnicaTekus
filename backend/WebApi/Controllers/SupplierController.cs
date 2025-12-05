@@ -46,7 +46,7 @@ namespace WebApi.Controllers
         {
             var result = await _updateSupplierUseCase.ExecuteAsync(model);
 
-            return result == false ? NotFound() : Ok(result);
+            return result == false ? NotFound() : Ok();
         }
 
         [HttpGet("GetAll")]

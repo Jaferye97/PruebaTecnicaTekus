@@ -35,6 +35,7 @@ builder.Services.AddScoped<IDeleteSupplierAttributeByIdUseCase, DeleteSupplierAt
 // Service
 builder.Services.AddScoped<IAddServiceWithCountryUseCase, AddServiceWithCountryUseCase>();
 builder.Services.AddScoped<IGetServiceByIdUseCase, GetServiceByIdUseCase>();
+builder.Services.AddScoped<IUpdateServiceUseCase, UpdateServiceUseCase>();
 
 // Port - Repository
 builder.Services.AddScoped<ISupplierRepositoryPort, SupplierRepository>();

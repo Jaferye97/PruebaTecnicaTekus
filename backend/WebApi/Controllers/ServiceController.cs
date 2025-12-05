@@ -10,14 +10,16 @@ namespace WebApi.Controllers
     {
         private readonly IAddServiceWithCountryUseCase _addServiceWithCountryUseCase;
         private readonly IGetServiceByIdUseCase _getServiceByIdUseCase;
+        private readonly IUpdateServiceUseCase _updateServiceUseCase;
 
         public ServiceController(
             IAddServiceWithCountryUseCase addServiceWithCountryUseCase,
-            IGetServiceByIdUseCase getServiceByIdUseCase
-        )
+            IGetServiceByIdUseCase getServiceByIdUseCase,
+            IUpdateServiceUseCase updaterServiceUseCase)
         {
             _addServiceWithCountryUseCase = addServiceWithCountryUseCase;
             _getServiceByIdUseCase = getServiceByIdUseCase;
+            _updateServiceUseCase = updaterServiceUseCase;
         }
 
         [HttpPost()]
@@ -33,6 +35,14 @@ namespace WebApi.Controllers
             var result = await _getServiceByIdUseCase.ExecuteAsync(id);
 
             return result == null ? NotFound() : Ok(result);
+        }
+
+        [HttpPut()]
+        public async Task<IActionResult> UpdateAsync([FromBody] ServiceModel model)
+        {
+            var result = await _updateServiceUseCase.ExecuteAsync(model);
+
+            return result == false ? NotFound() : Ok();
         }
     }
 }
