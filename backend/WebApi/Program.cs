@@ -23,20 +23,26 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Supplier
 builder.Services.AddScoped<IAddSupplierUseCase, AddSupplierUseCase>();
 builder.Services.AddScoped<IGetSupplierByIdUseCase, GetSupplierByIdUseCase>();
 builder.Services.AddScoped<IUpdateSupplierUseCase, UpdateSupplierUseCase>();
 builder.Services.AddScoped<IGetSupplierByFiltersUseCase, GetSupplierByFiltersUseCase>();
 
+// SupplierAttribute
 builder.Services.AddScoped<IDeleteSupplierAttributeByIdUseCase, DeleteSupplierAttributeByIdUseCase>();
 
+// Service
 builder.Services.AddScoped<IAddServiceWithCountryUseCase, AddServiceWithCountryUseCase>();
+builder.Services.AddScoped<IGetServiceByIdUseCase, GetServiceByIdUseCase>();
 
+// Port - Repository
 builder.Services.AddScoped<ISupplierRepositoryPort, SupplierRepository>();
 builder.Services.AddScoped<ISupplierAttributeRepositoryPort, SupplierAttributeRepository>();
 builder.Services.AddScoped<IServiceRepositoryPort, ServiceRepository>();
 builder.Services.AddScoped<IServiceCountryRepository, ServiceCountryRepository>();
 
+// Repository
 builder.Services.AddScoped<ISupplierAttributeRepository, SupplierAttributeRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 

@@ -1,5 +1,7 @@
-﻿using Application.Ports.RepositoryEntityFrameworkSqlServer;
+﻿using System.Linq.Expressions;
+using Application.Ports.RepositoryEntityFrameworkSqlServer;
 using Domain.Models.Service;
+using Microsoft.EntityFrameworkCore;
 using RepositoryEntityFrameworkSqlServer.Context;
 using RepositoryEntityFrameworkSqlServer.Entities;
 using RepositoryEntityFrameworkSqlServer.Mappers;
@@ -61,6 +63,22 @@ namespace RepositoryEntityFrameworkSqlServer.Repositories.Implementations
                 await transaction.RollbackAsync();
                 return false;
             }
+        }
+
+        public async Task<bool> ExistRecordAsync(int id) => await base.CountAsync(x => x.Id == id) > 0;
+
+        public async Task<ServiceWithCountryModel> GetAsync(int id)
+        {
+            IQueryable<ServiceEntity> query = _dbSet;
+
+            query = query.Include(x => x.ServiceCountry).ThenInclude(x => x.Country);
+            query = query.Where(x => x.Id == id);
+
+            var resultQuery = await query.ToListAsync().ConfigureAwait(false);
+
+            var result = resultQuery.Select(ServiceWithCountryMapper.ToDomain).ToList();
+
+            return result.FirstOrDefault();
         }
     }
 }
