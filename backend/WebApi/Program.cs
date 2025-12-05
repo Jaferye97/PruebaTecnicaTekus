@@ -1,4 +1,6 @@
 using Application.Ports.RepositoryEntityFrameworkSqlServer;
+using Application.UseCases.Service;
+using Application.UseCases.Service.Implementations;
 using Application.UseCases.Supplier;
 using Application.UseCases.Supplier.Implementations;
 using Application.UseCases.SupplierAttribute;
@@ -28,10 +30,15 @@ builder.Services.AddScoped<IGetSupplierByFiltersUseCase, GetSupplierByFiltersUse
 
 builder.Services.AddScoped<IDeleteSupplierAttributeByIdUseCase, DeleteSupplierAttributeByIdUseCase>();
 
+builder.Services.AddScoped<IAddServiceWithCountryUseCase, AddServiceWithCountryUseCase>();
+
 builder.Services.AddScoped<ISupplierRepositoryPort, SupplierRepository>();
 builder.Services.AddScoped<ISupplierAttributeRepositoryPort, SupplierAttributeRepository>();
+builder.Services.AddScoped<IServiceRepositoryPort, ServiceRepository>();
+builder.Services.AddScoped<IServiceCountryRepository, ServiceCountryRepository>();
 
 builder.Services.AddScoped<ISupplierAttributeRepository, SupplierAttributeRepository>();
+builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 
 var app = builder.Build();
 
