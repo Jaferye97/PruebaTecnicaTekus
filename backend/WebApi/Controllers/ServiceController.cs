@@ -11,15 +11,18 @@ namespace WebApi.Controllers
         private readonly IAddServiceWithCountryUseCase _addServiceWithCountryUseCase;
         private readonly IGetServiceByIdUseCase _getServiceByIdUseCase;
         private readonly IUpdateServiceUseCase _updateServiceUseCase;
+        private readonly IGetServiceByFiltersUseCase _getServiceByFiltersUseCase;
 
         public ServiceController(
             IAddServiceWithCountryUseCase addServiceWithCountryUseCase,
             IGetServiceByIdUseCase getServiceByIdUseCase,
-            IUpdateServiceUseCase updaterServiceUseCase)
+            IUpdateServiceUseCase updaterServiceUseCase,
+            IGetServiceByFiltersUseCase getServiceByFiltersUseCase)
         {
             _addServiceWithCountryUseCase = addServiceWithCountryUseCase;
             _getServiceByIdUseCase = getServiceByIdUseCase;
             _updateServiceUseCase = updaterServiceUseCase;
+            _getServiceByFiltersUseCase = getServiceByFiltersUseCase;
         }
 
         [HttpPost()]
@@ -43,6 +46,14 @@ namespace WebApi.Controllers
             var result = await _updateServiceUseCase.ExecuteAsync(model);
 
             return result == false ? NotFound() : Ok();
+        }
+
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllAsync([FromQuery] ServiceFilterModel filters)
+        {
+            var result = await _getServiceByFiltersUseCase.ExecuteAsync(filters);
+
+            return Ok(result);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Models.Service;
+﻿using Domain.Models.Commons;
+using Domain.Models.Service;
 
 namespace Application.Ports.RepositoryEntityFrameworkSqlServer
 {
@@ -8,5 +9,6 @@ namespace Application.Ports.RepositoryEntityFrameworkSqlServer
         Task<ServiceWithCountryModel> GetAsync(int id);
         Task<bool> ExistRecordAsync(int id);
         Task<ServiceModel> UpdateAsync(ServiceModel model);
+        Task<PagedResult<ServiceWithCountryModel>> GetAllAsync(ServiceFilterModel filter);
     }
 }

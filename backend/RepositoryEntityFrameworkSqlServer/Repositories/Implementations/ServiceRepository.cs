@@ -1,4 +1,5 @@
 ﻿using Application.Ports.RepositoryEntityFrameworkSqlServer;
+using Domain.Models.Commons;
 using Domain.Models.Service;
 using Microsoft.EntityFrameworkCore;
 using RepositoryEntityFrameworkSqlServer.Context;
@@ -81,5 +82,42 @@ namespace RepositoryEntityFrameworkSqlServer.Repositories.Implementations
         }
 
         public async Task<ServiceModel> UpdateAsync(ServiceModel model) => ServiceMapper.ToDomain(await base.UpdateAsync(model));
+
+        public async Task<PagedResult<ServiceWithCountryModel>> GetAllAsync(ServiceFilterModel filter)
+        {
+            IQueryable<ServiceEntity> query = _dbSet;
+
+            query = query.Where(t => t.SupplierId == filter.SupplierId);
+
+            if (!string.IsNullOrEmpty(filter.Name))
+                query = query.Where(t => t.Name.Contains(filter.Name));
+
+            if (filter.MinHourlyRate > 0)
+                query = query.Where(t => t.HourlyRate >= filter.MinHourlyRate);
+
+            if (filter.MaxHourlyRate > 0)
+                query = query.Where(t => t.HourlyRate <= filter.MinHourlyRate);
+
+            var totalItems = await query.CountAsync();
+
+            query = query.Include(x => x.ServiceCountry).ThenInclude(x => x.Country);
+
+            filter.Page = filter.Page <= 0 ? 1 : filter.Page;
+            filter.PageSize = filter.PageSize <= 0 ? 10 : filter.PageSize;
+
+            var entities = await query
+                .OrderByDescending(t => t.Name)
+                .Skip((filter.Page - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+
+            return new PagedResult<ServiceWithCountryModel>
+            {
+                Items = entities.Select(ServiceWithCountryMapper.ToDomain).ToList(),
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling((double)totalItems / filter.PageSize),
+                CurrentPage = filter.Page
+            };
+        }
     }
 }
