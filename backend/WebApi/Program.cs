@@ -75,8 +75,9 @@ builder.Services.AddScoped<IGetServiceByIdUseCase, GetServiceByIdUseCase>();
 builder.Services.AddScoped<IUpdateServiceUseCase, UpdateServiceUseCase>();
 builder.Services.AddScoped<IGetServiceByFiltersUseCase, GetServiceByFiltersUseCase>();
 
-// Service
+// ServiceCountry
 builder.Services.AddScoped<IDeleteServiceCountryByIdUseCase, DeleteServiceCountryByIdUseCase>();
+builder.Services.AddScoped<IAddServiceCountryUseCase, AddServiceCountryUseCase>();
 
 // Port - Repository
 builder.Services.AddScoped<ISupplierRepositoryPort, SupplierRepository>();
@@ -89,11 +90,13 @@ builder.Services.AddScoped<IServiceCountryRepositoryPort, ServiceCountryReposito
 builder.Services.AddScoped<ISupplierAttributeRepository, SupplierAttributeRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 
+// JWT
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
 builder.Services.AddSingleton<IJwtService, JwtService>();
 builder.Services.AddTransient<AuthenticationUserUseCase>();
 
+// Authentication
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter());
