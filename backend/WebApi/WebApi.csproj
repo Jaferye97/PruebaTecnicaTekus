@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CountriesApiClient\CountriesApiClient.csproj" />
     <ProjectReference Include="..\RepositoryEntityFrameworkSqlServer\RepositoryEntityFrameworkSqlServer.csproj" />
     <ProjectReference Include="..\TokenService\TokenService.csproj" />
   </ItemGroup>

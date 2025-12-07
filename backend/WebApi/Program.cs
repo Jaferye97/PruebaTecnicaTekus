@@ -1,7 +1,12 @@
 using System.Text;
+using Application.Ports.CountriesApiClient;
 using Application.Ports.Dependencies;
 using Application.Ports.RepositoryEntityFrameworkSqlServer;
+using Application.Services;
+using Application.Services.Implementations;
 using Application.UseCases.Authentication.Implementations;
+using Application.UseCases.Country;
+using Application.UseCases.Country.Implementations;
 using Application.UseCases.Service;
 using Application.UseCases.Service.Implementations;
 using Application.UseCases.ServiceCountry;
@@ -10,6 +15,7 @@ using Application.UseCases.Supplier;
 using Application.UseCases.Supplier.Implementations;
 using Application.UseCases.SupplierAttribute;
 using Application.UseCases.SupplierAttribute.Implementations;
+using CountriesApiClient;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -123,6 +129,17 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
         )
     };
+});
+
+// Cache
+builder.Services.AddScoped<ICountriesService, CachedCountriesService>();
+builder.Services.AddScoped<ICountriesApiClientPort, CountriesApiClientService>();
+
+builder.Services.AddMemoryCache();
+
+builder.Services.AddHttpClient<ICountriesApiClientPort, CountriesApiClientService>(client =>
+{
+    client.BaseAddress = new Uri("https://restcountries.com/v3.1/all?fields=cca2,cca3,name");
 });
 
 var app = builder.Build();
