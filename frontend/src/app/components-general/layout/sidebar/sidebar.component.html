@@ -1,0 +1,35 @@
+<div class="cursor-pointer">
+  <mat-nav-list>
+    <ng-container *ngFor="let section of menu">
+      <mat-list-item (click)="toggleSection(section.key)">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center gap-2">
+            <mat-icon>{{ section.icon }}</mat-icon>
+            <span>{{ section.title }}</span>
+          </div>
+          <div>
+            <mat-icon>
+              {{
+                activeSection === section.key ? "expand_less" : "expand_more"
+              }}
+            </mat-icon>
+          </div>
+        </div>
+      </mat-list-item>
+
+      <div *ngIf="activeSection === section.key">
+        <mat-nav-list>
+          <a
+            mat-list-item
+            *ngFor="let item of section.items"
+            [routerLink]="item.route"
+            routerLinkActive="active-item"
+            class="subitem ps-5"
+          >
+            {{ item.title }}
+          </a>
+        </mat-nav-list>
+      </div>
+    </ng-container>
+  </mat-nav-list>
+</div>
