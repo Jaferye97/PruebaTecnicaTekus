@@ -1,0 +1,26 @@
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow p-4" style="width: 360px; border-radius: 12px">
+    <h3 class="text-center mb-4">Iniciar Sesión</h3>
+
+    <form [formGroup]="form" (ngSubmit)="login()">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" formControlName="username" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+
+      <button
+        mat-flat-button
+        color="primary"
+        class="w-100"
+        [disabled]="loading || form.invalid"
+      >
+        {{ loading ? "Ingresando..." : "Ingresar" }}
+      </button>
+    </form>
+  </div>
+</div>

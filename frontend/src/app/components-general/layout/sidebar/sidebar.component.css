@@ -1,0 +1,13 @@
+/* Subitems (hijos del menú) */
+.subitem {
+  font-size: 0.95rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+/* Ítem activo al hacer clic (resalta el submenú) */
+.active-item {
+  background-color: #e0e0e0;
+  font-weight: 500;
+  border-radius: 4px;
+}
