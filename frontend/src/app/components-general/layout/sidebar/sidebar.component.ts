@@ -23,7 +23,7 @@ export class SidebarComponent {
         {
           title: 'All Suppliers',
           key: 'all-suppliers',
-          route: '',
+          route: 'Supplier',
           icon: 'storage',
         },
       ],

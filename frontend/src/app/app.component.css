@@ -10,3 +10,11 @@
 .main-content {
   padding: 20px;
 }
+
+mat-card {
+  border-radius: 12px;
+}
+
+mat-card-title {
+  font-size: 18px;
+}
