@@ -85,10 +85,10 @@ namespace RepositoryEntityFrameworkSqlServer.Repositories.Implementations
                 query = query.Where(t => t.Name.Contains(filter.Name));
 
             if (!string.IsNullOrEmpty(filter.Email))
-                query = query.Where(t => t.Email == filter.Email);
+                query = query.Where(t => t.Email.Contains(filter.Email));
 
             if (!string.IsNullOrEmpty(filter.TaxId))
-                query = query.Where(t => t.TaxId == filter.TaxId);
+                query = query.Where(t => t.TaxId.Contains(filter.TaxId));
 
             var totalItems = await query.CountAsync();
 
