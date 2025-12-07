@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
-import { delay, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+
+import { environment } from '../../../../environments/environment';
+import { urlServices } from '../../../../environments/url-services';
+import { TokenLogin } from '../interfaces/Token';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  login(username: string, password: string) {
-    if (username === 'admin' && password === 'admin') {
-      return of('mocked-token-12345').pipe(delay(800)); // simula delay
-    } else {
-      return throwError(() => new Error('Invalid credentials')).pipe(
-        delay(800)
-      );
-    }
+  constructor(private http: HttpClient) {}
+
+  login(username: string, password: string): Observable<TokenLogin> {
+    const urlConsulta = `${environment.urlInicial}${urlServices.auth}/Login`;
+    return this.http.post<TokenLogin>(urlConsulta, { username, password });
   }
 }

@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 import { SidebarComponent } from './components-general/layout/sidebar/sidebar.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -12,7 +13,13 @@ const myComponents = [SidebarComponent, LoginComponent];
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatSidenavModule, CommonModule, ...myComponents],
+  imports: [
+    RouterOutlet,
+    MatSidenavModule,
+    CommonModule,
+    HttpClientModule,
+    ...myComponents,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
