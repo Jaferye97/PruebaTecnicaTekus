@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenService", "TokenService\TokenService.csproj", "{208A36CC-EC9B-4AB6-BA54-FD012DF124BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountriesApiClient", "CountriesApiClient\CountriesApiClient.csproj", "{35BA9FC9-6EAF-45D1-9D7F-BA80A428BD44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{208A36CC-EC9B-4AB6-BA54-FD012DF124BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{208A36CC-EC9B-4AB6-BA54-FD012DF124BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{208A36CC-EC9B-4AB6-BA54-FD012DF124BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35BA9FC9-6EAF-45D1-9D7F-BA80A428BD44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35BA9FC9-6EAF-45D1-9D7F-BA80A428BD44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35BA9FC9-6EAF-45D1-9D7F-BA80A428BD44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35BA9FC9-6EAF-45D1-9D7F-BA80A428BD44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +70,7 @@ Global
 		{5BB62396-104E-4961-9886-5BBDF724F378} = {58985AC5-1ED8-49C5-A2D7-1E73C9A18CA5}
 		{E8247B15-E2D2-45F6-807F-B70FB68A83CC} = {2579961F-0BCB-4907-AE01-52883A47B675}
 		{208A36CC-EC9B-4AB6-BA54-FD012DF124BF} = {2579961F-0BCB-4907-AE01-52883A47B675}
+		{35BA9FC9-6EAF-45D1-9D7F-BA80A428BD44} = {2579961F-0BCB-4907-AE01-52883A47B675}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4034F3AD-2F92-4132-91B6-FCC45D587ED4}
