@@ -1,0 +1,2 @@
+﻿global using System.ComponentModel.DataAnnotations.Schema;
+global using RepositoryEntityFrameworkSqlServerV2.Entities.Constants;

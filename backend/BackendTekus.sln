@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenService", "TokenServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountriesApiClient", "CountriesApiClient\CountriesApiClient.csproj", "{35BA9FC9-6EAF-45D1-9D7F-BA80A428BD44}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryEntityFrameworkSqlServerV2", "RepositoryEntityFrameworkSqlServerV2\RepositoryEntityFrameworkSqlServerV2.csproj", "{178A72B6-6DB6-43B5-94DE-B1E32DEE92E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{35BA9FC9-6EAF-45D1-9D7F-BA80A428BD44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35BA9FC9-6EAF-45D1-9D7F-BA80A428BD44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35BA9FC9-6EAF-45D1-9D7F-BA80A428BD44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{178A72B6-6DB6-43B5-94DE-B1E32DEE92E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{178A72B6-6DB6-43B5-94DE-B1E32DEE92E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{178A72B6-6DB6-43B5-94DE-B1E32DEE92E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{178A72B6-6DB6-43B5-94DE-B1E32DEE92E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +77,7 @@ Global
 		{E8247B15-E2D2-45F6-807F-B70FB68A83CC} = {2579961F-0BCB-4907-AE01-52883A47B675}
 		{208A36CC-EC9B-4AB6-BA54-FD012DF124BF} = {2579961F-0BCB-4907-AE01-52883A47B675}
 		{35BA9FC9-6EAF-45D1-9D7F-BA80A428BD44} = {2579961F-0BCB-4907-AE01-52883A47B675}
+		{178A72B6-6DB6-43B5-94DE-B1E32DEE92E4} = {2579961F-0BCB-4907-AE01-52883A47B675}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4034F3AD-2F92-4132-91B6-FCC45D587ED4}
