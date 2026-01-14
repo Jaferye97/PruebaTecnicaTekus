@@ -1,9 +1,8 @@
-﻿namespace CountriesApiClient.Model
+﻿namespace CountriesApiClient.Model;
+
+internal class NameModel
 {
-    internal class NameModel
-    {
-        public string Common { get; set; }
-        public string Official { get; set; }
-        public Dictionary<string, NativeNameDetail> NativeName { get; set; }
-    }
+    public string Common { get; set; }
+    public string Official { get; set; }
+    public Dictionary<string, NativeNameDetail> NativeName { get; set; }
 }
