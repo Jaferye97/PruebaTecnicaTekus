@@ -3,146 +3,152 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryEntityFrameworkSqlServerV2.Repositories.Implementations;
 
-public abstract class BaseRepository<TEntity, TModel, TPrimary> : IBaseRepository<TEntity, TModel, TPrimary>
-    where TEntity : class, IEntity<TPrimary>
-    where TModel : class
+public abstract class BaseRepository<TEntity, TModel, TPrimary>
+    (
+        DbContext context,
+        Func<TEntity, TModel> toModel,
+        Func<TModel, TEntity> toEntity
+    ) :
+    IBaseRepository<TEntity, TModel, TPrimary>
+        where TEntity : class, IEntity<TPrimary>
+        where TModel : class
 {
-    private readonly Func<TEntity, TModel> _toModel;
-    private readonly Func<TModel, TEntity> _toEntity;
+    private readonly Func<TEntity, TModel> _toModel = toModel;
+    private readonly Func<TModel, TEntity> _toEntity = toEntity;
 
-    protected readonly DbContext _context;
-    protected readonly DbSet<TEntity> _dbSet;
+    protected readonly DbContext _context = context;
+    protected readonly DbSet<TEntity> _dbSet = context.Set<TEntity>();
 
-    protected BaseRepository(DbContext context, Func<TEntity, TModel> toModel, Func<TModel, TEntity> toEntity)
-    {
-        _context = context;
-        _dbSet = context.Set<TEntity>();
-        _toModel = toModel;
-        _toEntity = toEntity;
-
-        // Desactivar consulta con seguimiento
-        _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-    }
+    /* ======= GETTERS ========= */
 
     public virtual async Task<TModel?> GetAsync(TPrimary id)
     {
-        return _toModel(await _dbSet.FirstOrDefaultAsync(x => x.Id.Equals(id)));
+        var entity = await _dbSet
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.Id!.Equals(id));
+
+        return entity is null ? null : _toModel(entity);
     }
 
-    public virtual async Task<List<TModel>> GetAllAsync()
+    public virtual async Task<IReadOnlyList<TModel>> GetAllAsync()
     {
-        var entities = await _dbSet.ToListAsync();
+        var entities = await _dbSet
+            .AsNoTracking()
+            .ToListAsync();
+
         return entities.Select(_toModel).ToList();
     }
 
-    public async Task<List<TModel>> GetAllByIdAsync(IEnumerable<TPrimary> ids)
+    public async Task<IReadOnlyList<TModel>> GetAllByIdAsync(IEnumerable<TPrimary> ids)
     {
-        var entities = await _dbSet.Where(x => ids.Contains(x.Id)).ToListAsync();
+        var entities = await _dbSet
+            .AsNoTracking()
+            .Where(e => ids.Contains(e.Id))
+            .ToListAsync();
+
         return entities.Select(_toModel).ToList();
     }
+
+    /* ======= COMMANDS ========  */
 
     public virtual async Task<TEntity> AddAsync(TModel model)
     {
         var entity = _toEntity(model);
-        _dbSet.Add(entity);
-
-        await _context.SaveChangesAsync();
-
+        await _dbSet.AddAsync(entity);
         return entity;
     }
 
-    public virtual async Task<IEnumerable<TEntity>> AddAsync(IEnumerable<TModel> models)
+    public virtual async Task<IReadOnlyList<TEntity>> AddAsync(IEnumerable<TModel> models)
     {
-        var entities = models.Select(_toEntity);
-        _dbSet.AddRange(entities);
-
-        await _context.SaveChangesAsync();
-
+        var entities = models.Select(_toEntity).ToList();
+        await _dbSet.AddRangeAsync(entities);
         return entities;
     }
 
-    public virtual async Task<TEntity> UpdateAsync(TModel model)
+    public virtual Task<TEntity> UpdateAsync(TModel model)
     {
         var entity = _toEntity(model);
-        _context.Attach(entity).State = EntityState.Modified;
-
-        await _context.SaveChangesAsync();
-
-        return entity;
+        _dbSet.Update(entity);
+        return Task.FromResult(entity);
     }
 
-    public async Task UpdateAsync(IEnumerable<TModel> models)
+    public Task UpdateAsync(IEnumerable<TModel> models)
     {
-        foreach (var model in models)
-        {
-            var entity = _toEntity(model);
-            _context.Attach(entity).State = EntityState.Modified;
-        }
-
-        await _context.SaveChangesAsync();
+        var entities = models.Select(_toEntity).ToList();
+        _dbSet.UpdateRange(entities);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(TModel model)
+    public Task DeleteAsync(TModel model)
     {
         var entity = _toEntity(model);
-        _context.Attach(entity).State = EntityState.Deleted;
-
-        await _context.SaveChangesAsync();
+        _dbSet.Remove(entity);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(IEnumerable<TModel> models)
+    public Task DeleteAsync(IEnumerable<TModel> models)
     {
-        foreach (var model in models)
-        {
-            var entity = _toEntity(model);
-            _context.Attach(entity).State = EntityState.Deleted;
-        }
-
-        await _context.SaveChangesAsync();
+        var entities = models.Select(_toEntity).ToList();
+        _dbSet.RemoveRange(entities);
+        return Task.CompletedTask;
     }
 
-    public async Task<List<TModel>> GetWithPredicateAsync(Expression<Func<TEntity, bool>> predicate)
+    public async Task<IReadOnlyList<TModel>> GetWithPredicateAsync(Expression<Func<TEntity, bool>> predicate)
     {
-        var entities = await _dbSet.Where(predicate).ToListAsync();
+        var entities = await _dbSet
+            .AsNoTracking()
+            .Where(predicate)
+            .ToListAsync();
+
         return entities.Select(_toModel).ToList();
     }
 
-    public async Task<List<TModel>> GetAsync(
-        Expression<Func<TEntity, bool>> filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+    public async Task<IReadOnlyList<TModel>> GetAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         params Expression<Func<TEntity, object>>[] includes)
     {
-        IQueryable<TEntity> query = _dbSet;
+        IQueryable<TEntity> query = _dbSet.AsNoTracking();
 
-        if (includes != null)
+        foreach (var include in includes)
         {
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
+            query = query.Include(include);
         }
 
-        if (filter != null)
+        if (filter is not null)
         {
             query = query.Where(filter);
         }
 
-        if (orderBy != null)
+        if (orderBy is not null)
         {
             query = orderBy(query);
         }
 
-        var result = await query.ToListAsync().ConfigureAwait(false);
-        return result.Select(_toModel).ToList();
+        var entities = await query.ToListAsync();
+        return entities.Select(_toModel).ToList();
     }
 
-    public async Task<TModel> GetUniqueAsync(
-        Expression<Func<TEntity, bool>> filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+    public async Task<TModel?> GetUniqueAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         params Expression<Func<TEntity, object>>[] includes)
     {
-        var list = await GetAsync(filter, orderBy, includes);
-        return list.FirstOrDefault();
+        IQueryable<TEntity> query = _dbSet.AsNoTracking();
+
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+
+        if (filter is not null)
+            query = query.Where(filter);
+
+        if (orderBy is not null)
+            query = orderBy(query);
+
+        var entity = await query.FirstOrDefaultAsync();
+        return entity is null ? null : _toModel(entity);
     }
 
     public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
