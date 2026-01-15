@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RepositoryEntityFrameworkSqlServerV2.Entities;
 
 namespace RepositoryEntityFrameworkSqlServerV2.Context;
 
