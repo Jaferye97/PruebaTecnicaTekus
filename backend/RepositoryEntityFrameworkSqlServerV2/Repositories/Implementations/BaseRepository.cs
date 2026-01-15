@@ -30,6 +30,32 @@ public abstract class BaseRepository<TEntity, TModel, TPrimary>
         return entity is null ? null : _toModel(entity);
     }
 
+    public async Task<IReadOnlyList<TModel>> GetAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+        params Expression<Func<TEntity, object>>[] includes)
+    {
+        IQueryable<TEntity> query = _dbSet.AsNoTracking();
+
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+
+        if (filter is not null)
+        {
+            query = query.Where(filter);
+        }
+
+        if (orderBy is not null)
+        {
+            query = orderBy(query);
+        }
+
+        var entities = await query.ToListAsync();
+        return entities.Select(_toModel).ToList();
+    }
+
     public virtual async Task<IReadOnlyList<TModel>> GetAllAsync()
     {
         var entities = await _dbSet
@@ -47,6 +73,43 @@ public abstract class BaseRepository<TEntity, TModel, TPrimary>
             .ToListAsync();
 
         return entities.Select(_toModel).ToList();
+    }
+
+    public async Task<IReadOnlyList<TModel>> GetWithPredicateAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        var entities = await _dbSet
+            .AsNoTracking()
+            .Where(predicate)
+            .ToListAsync();
+
+        return entities.Select(_toModel).ToList();
+    }
+
+    public async Task<TModel?> GetUniqueAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+        params Expression<Func<TEntity, object>>[] includes)
+    {
+        IQueryable<TEntity> query = _dbSet.AsNoTracking();
+
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+
+        if (filter is not null)
+            query = query.Where(filter);
+
+        if (orderBy is not null)
+            query = orderBy(query);
+
+        var entity = await query.FirstOrDefaultAsync();
+        return entity is null ? null : _toModel(entity);
+    }
+
+    public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return await _dbSet.CountAsync(predicate);
     }
 
     /* ======= COMMANDS ========  */
@@ -91,68 +154,5 @@ public abstract class BaseRepository<TEntity, TModel, TPrimary>
         var entities = models.Select(_toEntity).ToList();
         _dbSet.RemoveRange(entities);
         return Task.CompletedTask;
-    }
-
-    public async Task<IReadOnlyList<TModel>> GetWithPredicateAsync(Expression<Func<TEntity, bool>> predicate)
-    {
-        var entities = await _dbSet
-            .AsNoTracking()
-            .Where(predicate)
-            .ToListAsync();
-
-        return entities.Select(_toModel).ToList();
-    }
-
-    public async Task<IReadOnlyList<TModel>> GetAsync(
-        Expression<Func<TEntity, bool>>? filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-        params Expression<Func<TEntity, object>>[] includes)
-    {
-        IQueryable<TEntity> query = _dbSet.AsNoTracking();
-
-        foreach (var include in includes)
-        {
-            query = query.Include(include);
-        }
-
-        if (filter is not null)
-        {
-            query = query.Where(filter);
-        }
-
-        if (orderBy is not null)
-        {
-            query = orderBy(query);
-        }
-
-        var entities = await query.ToListAsync();
-        return entities.Select(_toModel).ToList();
-    }
-
-    public async Task<TModel?> GetUniqueAsync(
-        Expression<Func<TEntity, bool>>? filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-        params Expression<Func<TEntity, object>>[] includes)
-    {
-        IQueryable<TEntity> query = _dbSet.AsNoTracking();
-
-        foreach (var include in includes)
-        {
-            query = query.Include(include);
-        }
-
-        if (filter is not null)
-            query = query.Where(filter);
-
-        if (orderBy is not null)
-            query = orderBy(query);
-
-        var entity = await query.FirstOrDefaultAsync();
-        return entity is null ? null : _toModel(entity);
-    }
-
-    public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
-    {
-        return await _dbSet.CountAsync(predicate);
     }
 }
